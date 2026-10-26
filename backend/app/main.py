@@ -11,6 +11,7 @@ from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from app.admin import router as admin_router
 from app.content import POSTS_BY_SLUG, site_payload
 from app.graph import GRAPH, run_agent
 from app.site_data import SITE
@@ -23,6 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(admin_router)
 
 DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 

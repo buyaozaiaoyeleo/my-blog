@@ -1,6 +1,18 @@
-"""站点里不随文章变化的那一层：船名、近况、关于、作品。"""
+"""站点里不随文章变化的那一层：船名、近况、关于、作品。
 
-SITE = {
+默认写在代码里；管理员保存后落到 content/site.json，下次启动优先读文件。
+"""
+
+from __future__ import annotations
+
+import copy
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+SITE_PATH = ROOT / "content" / "site.json"
+
+DEFAULT_SITE = {
     "name": "不要再熬夜了",
     "mark": "夜航",
     "eyebrow": "Night Passage",
@@ -104,3 +116,33 @@ SITE = {
         },
     ],
 }
+
+
+def _load_site() -> dict:
+    if SITE_PATH.exists():
+        data = json.loads(SITE_PATH.read_text(encoding="utf-8"))
+        if isinstance(data, dict):
+            merged = copy.deepcopy(DEFAULT_SITE)
+            merged.update(data)
+            return merged
+    return copy.deepcopy(DEFAULT_SITE)
+
+
+SITE = _load_site()
+
+
+def get_site() -> dict:
+    return SITE
+
+
+def replace_site(data: dict) -> dict:
+    """用管理员提交的数据整体替换站点配置，并写入磁盘。"""
+    required = ("name", "mark", "eyebrow", "deck", "now", "about", "works")
+    missing = [key for key in required if key not in data]
+    if missing:
+        raise ValueError(f"站点数据缺少字段：{', '.join(missing)}")
+    SITE.clear()
+    SITE.update(copy.deepcopy(data))
+    SITE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    SITE_PATH.write_text(json.dumps(SITE, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return SITE
