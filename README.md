@@ -41,4 +41,17 @@ cd ../backend && ../backend/.venv/bin/uvicorn app.main:app --port 8000
 - `/lab` 星图，以及会带回出处的档案员
 - `/feed.xml` 订阅
 
+## 管理舱
+
+普通访问始终落在用户界面；前台导航**不放**管理入口。
+
+要改界面内容，直接打开隐式地址：
+
+- 登录：<http://127.0.0.1:5173/admin>（账号密码默认已预填）
+- 工作台：登录后进入 `/admin/desk`
+
+默认管理员：`changxy` / `changxy`（可用 `ADMIN_USER`、`ADMIN_PASSWORD`、`ADMIN_SECRET` 覆盖，见 `.env.example`）。
+
+可管理：船名与主张、近况、关于、作品、文章增删改。保存后写入 `backend/content/`，前台刷新即可看到。
+
 可选环境变量见 `.env.example`。

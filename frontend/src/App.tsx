@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AdminDesk } from "./admin/AdminDesk";
+import { AdminLogin } from "./admin/AdminLogin";
 import { Shell } from "./components/Shell";
 import { About } from "./pages/About";
 import { Essay } from "./pages/Essay";
@@ -15,6 +17,8 @@ export function App() {
     <SiteProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="admin" element={<AdminLogin />} />
+          <Route path="admin/desk" element={<AdminDesk />} />
           <Route element={<Shell />}>
             <Route index element={<Home />} />
             <Route path="essays" element={<Essays />} />
